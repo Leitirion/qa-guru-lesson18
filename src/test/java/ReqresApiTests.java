@@ -1,9 +1,11 @@
-
+import models.ResourceData;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import static org.hamcrest.Matchers.hasItem;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReqresApiTests {
     @Test
@@ -102,5 +104,31 @@ public class ReqresApiTests {
                 .then()
                 .spec(Specs.response)
                 .body("name", is("Shelby"));
+    }
+
+    @Test
+    void singleResourcesWithLombokModel() {
+        ResourceData resp = given()
+                .spec(Specs.request)
+                .when()
+                .get("/unknown/4")
+                .then()
+                .spec(Specs.response)
+                .log().body()
+                .extract().as(ResourceData.class);
+        assertEquals("#7BC4C4", resp.getResource().getColor());
+    }
+
+    @Test
+    void getListResourcesWithLombokAndGroovy() {
+        given()
+                .spec(Specs.request)
+                .when()
+                .get("/unknown")
+                .then()
+                .spec(Specs.response)
+                .log().body()
+                .body("data.findAll{it.id > 2}.id",
+                        hasItem(6));
     }
 }
