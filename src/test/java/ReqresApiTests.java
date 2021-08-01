@@ -9,49 +9,54 @@ public class ReqresApiTests {
     @Test
     void getListOfUsersPerPageTest() {
         given()
+                .spec(Specs.request)
                 .when()
-                .get("https://reqres.in/api/users?page=2")
+                .get("users?page=2")
                 .then()
-                .statusCode(200)
+                .spec(Specs.response)
                 .body("per_page", is(6));
     }
 
     @Test
     void getSingleUserTotalTest() {
         given()
+                .spec(Specs.request)
                 .when()
-                .get("https://reqres.in/api/users?page=2")
+                .get("/users?page=2")
                 .then()
-                .statusCode(200)
+                .spec(Specs.response)
                 .body("total", is(12));
     }
 
     @Test
     void getSingleUserNotFoundTest() {
         given()
+                .spec(Specs.request)
                 .when()
-                .get("https://reqres.in/api/users/456")
+                .get("/users/456")
                 .then()
-                .statusCode(404);
+                .spec(Specs.response2);
     }
 
     @Test
     void getListResourceTest() {
         given()
+                .spec(Specs.request)
                 .when()
-                .get("https://reqres.in/api/unknown")
+                .get("/unknown")
                 .then()
-                .statusCode(200)
+                .spec(Specs.response)
                 .body("total", is(12));
     }
 
     @Test
     void getSingleResourceTest() {
         given()
+                .spec(Specs.request)
                 .when()
-                .get("https://reqres.in/api/unknown/6")
+                .get("/unknown/6")
                 .then()
-                .statusCode(200)
+                .spec(Specs.response)
                 .contentType(ContentType.JSON)
                 .body("data.name", is("blue turquoise"));
 
@@ -60,39 +65,42 @@ public class ReqresApiTests {
     @Test
     void getSingleResourceNotFound() {
         given()
+                .spec(Specs.request)
                 .when()
-                .get("https://reqres.in/api/unknown/456")
+                .get("/unknown/456")
                 .then()
-                .statusCode(404);
+                .spec(Specs.response2);
     }
 
     @Test
     void createUserTest() {
         given()
+                .spec(Specs.request)
                 .contentType(ContentType.JSON)
                 .body("{\n" +
                         "    \"name\": \"Shelby\",\n" +
                         "    \"job\": \"engineer\"\n" +
                         "}")
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
-                .statusCode(201)
+                .spec(Specs.response1)
                 .body("name", is("Shelby"));
     }
 
     @Test
     void updateUserTest() {
         given()
+                .spec(Specs.request)
                 .contentType(ContentType.JSON)
                 .body("{\n" +
                         "    \"name\": \"Shelby\",\n" +
                         "    \"job\": \"engineer\"\n" +
                         "}")
                 .when()
-                .put("https://reqres.in/api/users/4")
+                .put("/users/4")
                 .then()
-                .statusCode(200)
+                .spec(Specs.response)
                 .body("name", is("Shelby"));
     }
 }

@@ -1,4 +1,4 @@
-# **Tests for guru.qa lesson #16**
+# **Tests for guru.qa lesson #18**
 
 Api tests for ```https://reqres.in/```
 
